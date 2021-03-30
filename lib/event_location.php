@@ -1,44 +1,60 @@
 <?php
+
 class event_location extends \rex_yform_manager_dataset
 {
-    public function getLocationAsString() :string
+    const TABLE = 'event_location';
+
+    public static function findByRawName($name, $langId = null)
     {
-        return $this->getValue('street') .", ". $this->getValue('zip') .", ".$this->getValue('locality').", ".$this->getValue('countrycode');
+        $langId = $langId ?? 1;
+        $query  = parent::query();
+        $query->where('raw_name', $name, 'LIKE');
+        return $query->findOne();
     }
-    public function getLocationName() :string
+
+    public function getLocationAsString(): string
     {
-        return $this->getValue('name');
+        return $this->getValue('street') . ", " . $this->getValue('zip') . ", " . $this->getValue('locality') . ", " . $this->getValue('countrycode');
     }
-    
-    public function getLocationStreet() :string
+
+    public function getLocationName(): string
+    {
+        return $this->getValue('name_1');
+    }
+
+    public function getLocationStreet(): string
     {
         return $this->getValue('street');
     }
-    
-    public function getLocationZip() :string
+
+    public function getLocationZip(): string
     {
         return $this->getValue('zip');
     }
-    
-    public function getLocationLocality() :string
+
+    public function getLocationLocality(): string
     {
         return $this->getValue('locality');
     }
-    public function getLocationCountrycode() :string
+
+    public function getLocationCountrycode(): string
     {
         return $this->getValue('countrycode');
     }
-    public function getLocationLatLng() :string
+
+    public function getLocationLatLng(): string
     {
         return $this->getValue('lat_lng');
     }
-    public function getLocationLat() :string
+
+    public function getLocationLat(): string
     {
         return $this->getValue('lat');
     }
-    public function getLocationLng() :string
+
+    public function getLocationLng(): string
     {
         return $this->getValue('lng');
     }
-    
+
 }

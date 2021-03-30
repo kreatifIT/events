@@ -1,0 +1,26 @@
+{
+  "rex_event_category": {
+    "table": {
+      "id": "7",
+      "status": "1",
+      "table_name": "{{TABLE_PREFIX}}event_category",
+      "name": "Kategorien \/ Tags",
+      "description": "",
+      "list_amount": "50",
+      "list_sortfield": "prio",
+      "list_sortorder": "ASC",
+      "prio": "4",
+      "search": "0",
+      "hidden": "1",
+      "add_new": "1",
+      "export": "0",
+      "import": "0",
+      "mass_deletion": "0",
+      "mass_edit": "0",
+      "schema_overwrite": "1",
+      "history": "0"
+    },
+    "fields": [
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "{{TABLE_PREFIX}}event_location": {
+    "table": {
+      "id": "9",
+      "status": "1",
+      "table_name": "{{TABLE_PREFIX}}event_location",
+      "name": "Event-Orte",
+      "description": "",
+      "list_amount": "50",
+      "list_sortfield": "name_1",
+      "list_sortorder": "ASC",
+      "prio": "8",
+      "search": "0",
+      "hidden": "1",
+      "add_new": "1",
+      "export": "0",
+      "import": "0",
+      "mass_deletion": "0",
+      "mass_edit": "0",
+      "schema_overwrite": "1",
+      "history": "0",
+    },
+    "fields": [
+    ]
+  }
+}

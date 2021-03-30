@@ -1,0 +1,26 @@
+{
+  "rex_event_date": {
+    "table": {
+      "id": "8",
+      "status": "1",
+      "table_name": "{{TABLE_PREFIX}}event_date",
+      "name": "Events",
+      "description": "",
+      "list_amount": "100",
+      "list_sortfield": "startDate",
+      "list_sortorder": "DESC",
+      "prio": "5",
+      "search": "1",
+      "hidden": "1",
+      "add_new": "1",
+      "export": "1",
+      "import": "1",
+      "mass_deletion": "0",
+      "mass_edit": "0",
+      "schema_overwrite": "1",
+      "history": "0"
+    },
+    "fields": [
+    ]
+  }
+}
