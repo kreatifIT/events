@@ -1,6 +1,7 @@
 <?php
 
-$body = '<div id="fullcalendar"></div>';
+$fragment = new rex_fragment();
+$body = $fragment->parse('events/calendar/fullcalendar/wrapper.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);

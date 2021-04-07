@@ -111,7 +111,7 @@ Usability::ensureValueField($table, 'start', 'datetime', [
 ], [
     'search'     => 0,
     'label'      => 'Beginn',
-    'attributes' => json_encode(['data-yform-tools-datetimepicker' => 'DD.MM.YYYY HH:ii']),
+    'attributes' => json_encode(['data-yform-tools-datetimepicker' => 'DD.MM.YYYY HH:ii', 'autocomplete' => 'off']),
     'db_type'    => 'datetime',
 ]);
 
@@ -124,7 +124,7 @@ Usability::ensureValueField($table, 'end', 'datetime', [
 ], [
     'search'     => 0,
     'label'      => 'Ende',
-    'attributes' => json_encode(['data-yform-tools-datetimepicker' => 'DD.MM.YYYY HH:ii']),
+    'attributes' => json_encode(['data-yform-tools-datetimepicker' => 'DD.MM.YYYY HH:ii', 'autocomplete' => 'off']),
     'db_type'    => 'datetime',
 ]);
 
