@@ -7,7 +7,7 @@
       "name": "Events",
       "description": "",
       "list_amount": "100",
-      "list_sortfield": "startDate",
+      "list_sortfield": "start",
       "list_sortorder": "DESC",
       "prio": "5",
       "search": "1",
