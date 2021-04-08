@@ -27,13 +27,19 @@ class rex_api_fullcalendar extends rex_api_function
         $events = $query->find();
 
         foreach ($events as $event) {
-            $result[] = [
+            $result[] = rex_extension::registerPoint(new rex_extension_point('events.fullcalendar_event', [
                 'dataId' => $event->getId(),
                 'title'  => $event->getValue("name_{$langId}"),
                 'start'  => date('c', strtotime($event->getValue('start'))),
                 'end'    => date('c', strtotime($event->getValue('end'))),
-                //"url"    => "/redaxo/index.php?page=events/date&table_name=rex_event_date&rex_yform_manager_popup=0&data_id=" . $event->id . "&func=edit",
-            ];
+                'url'    => html_entity_decode(rex_url::backendPage('events/date', [
+                    'table_name' => rex::getTable(event_date::TABLE),
+                    'data_id'    => $event->getId(),
+                    'func'       => 'edit',
+                ])),
+            ], [
+                'dataset' => $event,
+            ]));;
         }
 
         $result = rex_extension::registerPoint(new rex_extension_point('events.fullcalendar_api_results', $result, [

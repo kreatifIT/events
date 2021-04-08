@@ -8,8 +8,9 @@ $settings = rex_extension::registerPoint(new rex_extension_point('events.fullcal
     'editable'      => true,
     'initialView'   => 'timeGridWeek',
     'nowIndicator'  => true,
+    'weekNumbers'   => true,
     'initialDate'   => date('Y-m-d'),
-    'events'        => html_entity_decode(\rex_url::frontendController(['rex-api-call' => 'fullcalendar', 'action' => 'get-events'])),
+    'events'        => html_entity_decode(\rex_url::frontendController(['rex-api-call' => 'fullcalendar', 'action' => 'get-events', 'ts' => time()])),
     'headerToolbar' => [
         'left'   => 'prev,next today',
         'center' => 'title',
