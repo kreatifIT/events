@@ -6,6 +6,17 @@ class rex_api_fullcalendar extends rex_api_function
 
     public function execute()
     {
+        $action = rex_request('action', 'string');
+
+        if ($action == 'get-events') {
+            $this->getEvents();
+        } else if ($action == 'save-event') {
+            $this->saveEvent();
+        }
+    }
+
+    private function getEvents()
+    {
         $start  = rex_get('start', 'string');
         $end    = rex_get('end', 'string');
         $langId = rex_get('lang_id', 'int', rex_clang::getCurrentId());
@@ -17,15 +28,43 @@ class rex_api_fullcalendar extends rex_api_function
 
         foreach ($events as $event) {
             $result[] = [
-                "title" => $event->getValue("name_{$langId}"),
-                "start" => date('c', strtotime($event->getValue('start'))),
-                "end"   => date('c', strtotime($event->getValue('end'))),
-                //                "url"   => "/redaxo/index.php?page=events/date&table_name=rex_event_date&rex_yform_manager_popup=0&data_id=" . $event->id . "&func=edit",
+                'dataId' => $event->getId(),
+                'title'  => $event->getValue("name_{$langId}"),
+                'start'  => date('c', strtotime($event->getValue('start'))),
+                'end'    => date('c', strtotime($event->getValue('end'))),
+                //"url"    => "/redaxo/index.php?page=events/date&table_name=rex_event_date&rex_yform_manager_popup=0&data_id=" . $event->id . "&func=edit",
             ];
         }
 
+        $result = rex_extension::registerPoint(new rex_extension_point('events.fullcalendar_api_results', $result, [
+            'start' => $start,
+            'end'   => $end,
+        ]));
+
         header('Content-Type: application/json; charset=UTF-8');
         exit(json_encode($result));
+    }
+
+    private function saveEvent()
+    {
+        $event   = rex_post('event', 'array', []);
+        $eventId = (int)$event['extendedProps']['dataId'];
+
+        if (empty($event)) {
+            throw new rex_api_exception('event data is missing');
+        }
+
+        $dataset = $eventId ? event_date::get($eventId) : null;
+
+        if (!$dataset) {
+            $dataset = event_date::create();
+        }
+
+        $dataset->setValue('start', date('YmdHis', strtotime($event['start'])));
+        $dataset->setValue('end', date('YmdHis', strtotime($event['end'])));
+        $dataset->save();
+        header('Content-Type: application/json; charset=UTF-8');
+        exit(json_encode(['success' => true]));
     }
 
     public static function httpError($result)
