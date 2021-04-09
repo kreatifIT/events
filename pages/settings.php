@@ -1,7 +1,20 @@
 <?php
 
-$addon = rex_addon::get('events');
-$form  = rex_config_form::factory($addon->getName());
+$form = rex_config_form::factory('events');
+
+$form->addFieldset('Kalender');
+$field = $form->addSelectField('fullcalendar_initial_view');
+$field->setLabel('Startansicht');
+$select = $field->getSelect();
+$select->addOptions([
+    'dayGridMonth' => 'Monat',
+    'timeGridWeek' => 'Woche',
+    'timeGridDay'  => 'Tag',
+    'listMonth'     => 'Liste vom Monat',
+]);
+
+
+$form->addFieldset('allgemeine Einstellungen');
 
 $field = $form->addInputField('text', 'currency', null, ["class" => "form-control"]);
 $field->setLabel(rex_i18n::msg('events_currency'));
@@ -16,6 +29,6 @@ $field->setNotice(rex_i18n::msg('events_timezone_notice') . '<a href="https://de
 
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);
-$fragment->setVar('title', $addon->i18n('events_settings'), false);
+$fragment->setVar('title', rex_i18n::msg('events_settings'), false);
 $fragment->setVar('body', $form->get(), false);
 echo $fragment->parse('core/page/section.php');

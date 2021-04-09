@@ -3,10 +3,11 @@
 
 $clang = rex_clang::getCurrent();
 
+
 $settings = rex_extension::registerPoint(new rex_extension_point('events.fullcalendar_settings', [
     'locale'        => $clang->getCode(),
     'editable'      => true,
-    'initialView'   => 'timeGridWeek',
+    'initialView'   => \events\Settings::getValue('fullcalendar_initial_view', 'timeGridWeek'),
     'nowIndicator'  => true,
     'weekNumbers'   => true,
     'initialDate'   => date('Y-m-d'),
@@ -14,7 +15,7 @@ $settings = rex_extension::registerPoint(new rex_extension_point('events.fullcal
     'headerToolbar' => [
         'left'   => 'prev,next today',
         'center' => 'title',
-        'right'  => 'dayGridMonth,timeGridWeek,timeGridDay',
+        'right'  => 'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
     ],
 ]));
 
