@@ -41,9 +41,9 @@ foreach ($langs as $index => $lang) {
     Usability::ensureValidateField($table, "name_{$lang->getId()}", 'empty', [
         'prio' => $prio++,
     ], [
-        'list_hidden'  => 1,
-        'search'       => 0,
-        'message'      => 'Bitte geben Sie für alle Sprachen einen Namen ein',
+        'list_hidden' => 1,
+        'search'      => 0,
+        'message'     => 'Bitte geben Sie für alle Sprachen einen Namen ein',
     ]);
 
     if (($index + 1) < count($langs)) {
@@ -73,6 +73,16 @@ Usability::ensureValueField($table, 'image', 'event_media', [
     'list_hidden' => 1,
     'search'      => 0,
     'label'       => 'Bild',
+    'db_type'     => 'varchar(191)',
+]);
+
+Usability::ensureValueField($table, 'color', 'text', [
+    'prio' => $prio++,
+], [
+    'list_hidden' => 1,
+    'search'      => 0,
+    'label'       => 'Farbe',
+    'attributes'  => json_encode(['type' => 'color']),
     'db_type'     => 'varchar(191)',
 ]);
 

@@ -17,6 +17,7 @@ class rex_api_fullcalendar extends rex_api_function
 
     private function getEvents()
     {
+        $result = [];
         $start  = rex_get('start', 'string');
         $end    = rex_get('end', 'string');
         $langId = rex_get('lang_id', 'int', rex_clang::getCurrentId());
@@ -27,9 +28,14 @@ class rex_api_fullcalendar extends rex_api_function
         $events = $query->find();
 
         foreach ($events as $event) {
-            $result[] = rex_extension::registerPoint(new rex_extension_point('events.fullcalendar_event', [
+            $categoryId = current(array_filter(explode(',', $event->getValue('categories'))));
+            $category   = $categoryId ? event_category::get($categoryId) : null;
+            $color      = $category && 1 == $category->getValue('status') ? $category->getValue('color') : '';
+
+            $settings = [
                 'dataId' => $event->getId(),
                 'title'  => $event->getValue("name_{$langId}"),
+                'allDay' => (bool)$event->getValue('all_day'),
                 'start'  => date('c', strtotime($event->getValue('start'))),
                 'end'    => date('c', strtotime($event->getValue('end'))),
                 'url'    => html_entity_decode(rex_url::backendPage('events/date', [
@@ -37,7 +43,13 @@ class rex_api_fullcalendar extends rex_api_function
                     'data_id'    => $event->getId(),
                     'func'       => 'edit',
                 ])),
-            ], [
+            ];
+
+            if ('' != $color) {
+                $settings['color'] = $color;
+            }
+
+            $result[] = rex_extension::registerPoint(new rex_extension_point('events.fullcalendar_event', $settings, [
                 'dataset' => $event,
             ]));;
         }
