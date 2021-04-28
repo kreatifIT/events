@@ -11,7 +11,7 @@ requires:
     packages:
         yform: ^3.3
         yform_geo_osm: ^1.2.1
-        yform_usability: ^1.5
+        yform_usability: ^1.7
 
 
 page:

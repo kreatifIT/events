@@ -3,7 +3,7 @@
 use Ramsey\uuid\uuid;
 
 
-class event_date extends \rex_yform_manager_dataset
+class event_date extends \yform\usability\Model
 {
     const TABLE = 'event_date';
 
@@ -140,10 +140,5 @@ class event_date extends \rex_yform_manager_dataset
     {
         $this->endDate = $this->getDateTime($this->getValue("endDate"), $this->getValue("endTime"));
         return $this->endDate;
-    }
-
-    public function getName()
-    {
-        return $this->getValue("name");
     }
 }

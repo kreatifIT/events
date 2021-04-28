@@ -1,6 +1,6 @@
 <?php
 
-class event_location extends \rex_yform_manager_dataset
+class event_location extends \yform\usability\Model
 {
     const TABLE = 'event_location';
 
