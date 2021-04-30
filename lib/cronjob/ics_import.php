@@ -172,7 +172,7 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                             }
                         }
                     } else {
-                        $locationId = 0;
+                        $locationId = $location->getId();
                     }
                 } else {
                     $locationId = 0;
@@ -208,6 +208,7 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                 $dataset->setValue('url', $event->url);
                 $dataset->setValue('categories', implode(',', array_unique($categoryIds)));
                 $dataset->setValue('eventStatus', 1);
+                $dataset->setValue('image', '');
 
                 if (property_exists($event, 'RRULE')) {
                     // repeating
@@ -238,6 +239,8 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                     $savedIds[] = $dataset->getId();
                 } else {
                     $debugData['queryErrors'][$event->uid] = $dataset->getMessages();
+                    $log = rex_logger::factory();
+                    $log->log(E_STRICT, 'Event-import: '. implode("\n", $dataset->getMessages()));
                     $errorCounter++;
                 }
             }
