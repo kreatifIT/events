@@ -31,6 +31,7 @@ class rex_cronjob_events_ics_import extends rex_cronjob
 
         if ($ical->eventCount) {
             $langCodes = [];
+            $updatedCategories = [];
             foreach (rex_clang::getAll(true) as $lang) {
                 $langCodes[$lang->getId()] = $lang->getCode();
             }
@@ -243,6 +244,8 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                     $log->log(E_STRICT, 'Event-import: '. implode("\n", $dataset->getMessages()));
                     $errorCounter++;
                 }
+
+                $updatedCategories = array_unique(array_merge($updatedCategories, $categoryIds));
             }
         }
         // Debug-Ausgabe
@@ -253,6 +256,13 @@ class rex_cronjob_events_ics_import extends rex_cronjob
         $where = ['uid <> ""'];
         if (count($savedIds)) {
             $where[] = 'id NOT IN(' . implode(',', $savedIds) . ')';
+        }
+        if (count($categoryIds)) {
+            $_where = [];
+            foreach ($categoryIds as $categoryId) {
+                $_where[] = "FIND_IN_SET('{$categoryId}', categories)";
+            }
+            $where[] = '('. implode(' OR ', $_where) .')';
         }
 
         $sql = rex_sql::factory();
