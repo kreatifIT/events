@@ -136,13 +136,16 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                 } else if ('' != trim($event->location)) {
                     $location = event_location::findByRawName($event->location);
 
+
                     if (!$location) {
                         $location = event_location::create();
-                        $result   = rex_var::toArray(\events\Mapbox::forwardGeocode($event->location, ['language' => implode(',', $langCodes)]));
+                        $result   = rex_var::toArray(\events\Mapbox::forwardGeocode($locations[0], ['language' => implode(',', $langCodes)]));
 
                         if (isset($result['features'][0])) {
-                            foreach (rex_clang::getAll(true) as $index => $lang) {
-                                $location->setValue("name_{$lang->getId()}", current(explode(',', $locations[$index] ?? $locations[0])));
+                            $langIndex = 0;
+                            foreach (rex_clang::getAll(true) as $lang) {
+                                $location->setValue("name_{$lang->getId()}", current(explode(',', $locations[$langIndex] ?? $locations[0])));
+                                $langIndex++;
                             }
                             $location->setValue('lat', (float)$result['features'][0]['geometry']['coordinates'][1]);
                             $location->setValue('lng', (float)$result['features'][0]['geometry']['coordinates'][0]);
@@ -182,6 +185,7 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                 $dtStart    = strtotime($event->dtstart);
                 $dtEnd      = strtotime($event->dtend);
                 $isFulltime = !(bool)($dtEnd - strtotime($event->dtstart . "+ 1 DAY"));  // Dirty Hack - ganztägige Ereignisse sind von 00:00 bis 00:00 des Folgetages;
+                $isFulltime = $isFulltime || $event->dtstart == $event->dtend || (date('His', $dtStart) == '000000' && date('His', $dtEnd) == '000000');
 
                 $field  = $dataset->getFields(['name' => 'start', 'type_id' => 'value'])[0];
                 $format = strtr($field->getElement('format'), ['DD' => 'd', 'MM' => 'm', 'YYYY' => 'Y', 'HH' => 'H', 'ii' => 'i', 'ss' => 's']);
@@ -196,9 +200,11 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                     $dataset->setValue('end', date($format, $dtEnd));
                 }
 
-                foreach (rex_clang::getAll(true) as $index => $lang) {
-                    $dataset->setValue("name_{$lang->getId()}", trim($names[$index] ?? $names[0]));
-                    $dataset->setValue("teaser_{$lang->getId()}", trim($teasers[$index] ?? $teasers[0]));
+                $langIndex = 0;
+                foreach (rex_clang::getAll(true) as $lang) {
+                    $dataset->setValue("name_{$lang->getId()}", trim($names[$langIndex] ?? $names[0]));
+                    $dataset->setValue("teaser_{$lang->getId()}", trim($teasers[$langIndex] ?? $teasers[0]));
+                    $langIndex++;
                 }
 
                 $dataset->setValue('location', $locationId);
