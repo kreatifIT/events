@@ -139,8 +139,9 @@ class rex_cronjob_events_ics_import extends rex_cronjob
 
                     if (!$location) {
                         $location = event_location::create();
-                        $result   = rex_var::toArray(\events\Mapbox::forwardGeocode($locations[0], ['language' => implode(',', $langCodes)]));
-
+                        $locationString = str_replace(['Str.', 'str.'], ['straße'], $locations[0]);
+                        $result   = \rex_var::toArray(\events\Mapbox::forwardGeocode($locationString, ['language' => implode(',',
+                                                                                                                             $langCodes)]));
                         if (isset($result['features'][0])) {
                             $langIndex = 0;
                             foreach (rex_clang::getAll(true) as $lang) {
@@ -153,6 +154,11 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                             $location->setValue('raw_result', $result['features'][0]);
                             $location->setValue('raw_name', $event->location);
 
+                            //current position is already the locality
+                            foreach ($langCodes as $langId => $langCode) {
+                                $location->setValue("locality_{$langId}", $result['features'][0]['text_' . $langCode]);
+                            }
+
                             foreach ($result['features'][0]['context'] as $context) {
                                 [$_type] = explode('.', $context['id']);
 
@@ -161,9 +167,10 @@ class rex_cronjob_events_ics_import extends rex_cronjob
                                         $location->setValue('zip', $context['text']);
                                         break;
                                     case 'country':
-                                        $location->setValue('countrycode', $context['short_code']);
+                                        $location->setValue('countrycode', strtoupper($context['short_code']));
                                         break;
                                     case 'place':
+                                        //update locality if mapbox is sure that this has to be locality
                                         foreach ($langCodes as $langId => $langCode) {
                                             $location->setValue("locality_{$langId}", $context['text_' . $langCode]);
                                         }
